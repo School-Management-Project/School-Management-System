@@ -1,11 +1,14 @@
-# from .models import Student,Department,Faculty,Coureses,Semester,Parent
-# from .models import Student
-from .models import Student,Department,Courses,Faculty,Subject,Semester
+from .models import Student,Department,Courses,Faculty,Subject
+from .models import Parent,Semester,SubjectFaculty
+# from .models import Semester,SubjectFaculty
 from django.views.decorators.csrf import csrf_exempt
-from .serializers import StudentSerializer,DepartmentSerializer,CoursesSerializer,FacultySerializer,SemesterSerializer,SubjectSerializer
+
+from .serializers import StudentSerializer, DepartmentSerializer, CoursesSerializer
+from .serializers import FacultySerializer, SemesterSerializer, SubjectSerializer 
+from .serializers import SubjectFacultySerializer, ParentSerializer
+# from .serializers import SubjectFacultySerializer
 
 
-# from .serializers import StudentSerializer,DepartmentSerializer,CoursesSerializer,SemesterSerializer,SubjectSerializer,FacultySerializer
 
 from django.views import generic
 from rest_framework import viewsets, filters
@@ -73,3 +76,11 @@ class FacultyViewSet(viewsets.ModelViewSet):
     queryset = Faculty.objects.all()
     serializer_class = FacultySerializer
 
+class SubjectFacultyViewSet(viewsets.ModelViewSet):
+    queryset = SubjectFaculty.objects.all()
+    serializer_class = SubjectFacultySerializer
+
+
+class ParentViewSet(viewsets.ModelViewSet):
+    queryset = Parent.objects.all()
+    serializer_class = ParentSerializer
