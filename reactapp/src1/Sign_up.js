@@ -1,10 +1,10 @@
+
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-// import axios from "axios";
-// import Dropdown from 'react-dropdown'
-import 'react-dropdown/style.css'
 
-class SignUpForm extends Component {
+
+class Sign_up extends Component {
     constructor() {
         super();
 
@@ -17,23 +17,24 @@ class SignUpForm extends Component {
             deptkey:'',
             // defaultSemOption:'Select Semester',
             // defaultCourseOption: 'Select Dept-Course',
-            hasAgreed: false
+            hasAgreed: false,
+            teams: {
+              'name':'sushil',
+              'rollno':'16107'
+            }
         };
 
         this.flag = 0;
 
+        this.countryData = [
+          { value: 'USA', name: 'USA' },
+          { value: 'CANADA', name: 'CANADA' }            
+      ];
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
-    
-    // handleChange(e) {
-    //   let {name, value} = e.target;
-    //   this.setState({
-    //     [name]: value,
-      
-    //   });
-      
-      // }
+
     handleChange(e) {
         let target = e.target;
         let value = target.type === 'checkbox' ? target.checked : target.value;
@@ -60,10 +61,6 @@ class SignUpForm extends Component {
         if(this.flag === 1){
             e.preventDefault(
                 console.log(this.state)
-                // axios.get(`http://127.0.0.1:8000/student/1/`)
-                // .then((res) => {
-                //     console.log(res)
-                // } )
             );
         }
         else{
@@ -73,6 +70,7 @@ class SignUpForm extends Component {
 
     render() {
         return (
+        <div class='App__Aside'>    
         <div className="FormCenter">
             <form onSubmit={this.handleSubmit} className="FormFields">
 
@@ -100,21 +98,19 @@ class SignUpForm extends Component {
                 <label className="FormField__Label" htmlFor="password">Password</label>
                 <input type="password" id="password" className="FormField__Input" placeholder="Enter your password" name="password" value={this.state.password} onChange={this.handleChange} />
               </div>
-
-              {/* <div className="FormField">
-                <Dropdown class="select" options={deptOptions} onChange={this._onSelect} value={this.defaultCourseOption} placeholder="Select Dept-Course" />
-              </div>
-
-              <div className="FormField">
-                <Dropdown options={semOptions} onChange={this._onSelect} value={this.defaultSemOption} placeholder="Select Semester" />
-              </div> */}
-
-{/* 
-drop down 3: dept
-drop down 3: course
-drop down 3: semid (optional)
-*/}
-
+ 
+     <div>
+       {
+         Object.keys(vals).map((key, index) => ( 
+         <select key={index}><b>****{key}****</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ 
+            {vals[key].map(function(name, index){
+                     return <option key={ index }>{name}</option> 
+                   })}
+           </select> 
+         ))
+       }
+     </div> 
 
               <div className="FormField">
                 <label className="FormField__Label" htmlFor="email">Department-Key</label>
@@ -123,8 +119,7 @@ drop down 3: semid (optional)
 
               <div className="FormField">
                 <label className="FormField__CheckboxLabel">
-                    <input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> I agree all statements in 
-                    {/* <a href="#" className="FormField__TermsLink">terms of service</a> */}
+                    <input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> I agree all statements in <a href="" className="FormField__TermsLink">terms of service</a>
                 </label>
               </div>
 
@@ -135,35 +130,14 @@ drop down 3: semid (optional)
 
             </form>
           </div>
+          </div>
         );
     }
 }
-// const defaultCourseOption = "Select Dept-Course"
-// const defaultSemOption = 'Select Semester'
 
-// const semOptions = [
-//     '1','2','3','4','5','6'
-// ]
+  var vals={
+  'Computer Science':['MCA','MSc','MTech'],
+  'Chemistry':['BSc','MSC']
+}
 
-// const deptOptions = [
-//     {
-//      type: 'group', name: 'Computer Science', items: [
-//        { value: 'MCA', label: 'MCA'},
-//        { value: 'MSC', label: 'MSC' }
-//      ]
-//     },
-//     {
-//      type: 'group', name: 'Chemistry', items: [
-//        { value: 'chem1', label: 'Chem 1' },
-//        { value: 'chem2', label: 'Chem 2' }
-//      ]
-//     },
-//     {
-//      type: 'group', name: 'Physics', items: [
-//        { value: 'phy1', label: 'Phy 1' },
-//        { value: 'phy2', label: 'Phy 2' }
-//      ]
-//     }
-//   ]
-
-export default SignUpForm;
+export default Sign_up;

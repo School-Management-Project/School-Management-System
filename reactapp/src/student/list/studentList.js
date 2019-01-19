@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 // import axios from "axios";
 import 'react-dropdown/style.css'
-import _ from 'lodash';
 import './studentlist.css'
 
 class StudentList extends Component {
@@ -96,20 +94,19 @@ console.log(this.state.sel)
           }
           />
         })
-        return <table class="table">
-          <tbody> {
-            rows
-          } </tbody> </table>
+        return <table className="table">
+                  <tbody>{rows}</tbody>
+              </table>
       }
     }
     
     const PersonRow = (props) => {
       return (
-        <tr class="row">
-          <td class="td">
+        <tr className="row">
+          <td className="td">
             { props.data.id }
           </td>
-          <td class="td">
+          <td className="td">
             { props.data.name }
           </td>
         </tr>

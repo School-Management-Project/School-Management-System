@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
-import { HashRouter as HashRouter, Router, Route, Link, NavLink } from 'react-router-dom';
-import SignUpForm from './student/register/SignUpForm';
-import SignInForm from './student/login/SignInForm';
+import { HashRouter, Route, NavLink } from 'react-router-dom';
 import Home from "./home/Home";
-import Department from "./src1/Department";
+import Department from "./department/Department";
 import Student from "./student/studentMain";
 import Teacher from "./teacher/teacherMain";
-import Contact from "./src1/Contact";
+import Contact from "./contact/Contact";
 import Sign_up from "./student/register/SignUpForm";
-import './src1/index.css'
+import './index.css'
 
 import './App.css';
 
@@ -25,12 +23,8 @@ class App extends Component {
             <li><NavLink to="/student/sign-in">Student</NavLink></li>
             <li><NavLink to="/teacher/sign-in">Teacher</NavLink></li>
             <li><NavLink to="/contact">Contact</NavLink></li>
-         
-            <li class='rr'><NavLink to="/signin">Sign In</NavLink>or
-                <NavLink to="/signup">Sign Up</NavLink>
-            </li>
-             
           </ul>
+          
           <div className="content">
             <Route exact path="/" component={Home}/>
             <Route path="/department" component={Department}/>

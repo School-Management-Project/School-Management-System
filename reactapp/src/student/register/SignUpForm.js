@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-// import axios from "axios";
+import axios from "axios";
 // import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
-import { MAX_BOARD_SIZE } from './constants'
-import _ from 'lodash';
 
 class SignUpForm extends Component {
     constructor() {
         super();
+
+        this.res = [];
 
         this.state = {
             name:'',
@@ -17,6 +16,8 @@ class SignUpForm extends Component {
             email: '',
             password: '',
             deptkey:'',
+            dept: 'cs',
+            course: 'mca',
             // defaultSemOption:'Select Semester',
             // defaultCourseOption: 'Select Dept-Course',
             hasAgreed: false,
@@ -50,31 +51,62 @@ console.log(this.state.sel)
     }
 
     handleSubmit(e) {
+      var bodyFormData = new FormData();
 
         this.flag = 1;
-        if(this.state.name === '')   this.flag = 0;
-        if(this.state.address === '')   this.flag = 0;
-        if(this.state.phone === '')   this.flag = 0;
-        if(this.state.password === '')   this.flag = 0;
-        if(this.state.deptkey === '')   this.flag = 0;
-        if(this.state.dept === '')   this.flag = 0;
-        if(this.state.course === '')   this.flag = 0;
+        
+        if(this.state.name === ''){ this.flag = 0; } else{ bodyFormData.set("studname", this.state.name) }
+        if(this.state.address === ''){ this.flag = 0; } else{ bodyFormData.set("studaddress", this.state.address) }
+        if(this.state.phone === ''){ this.flag = 0; } else{ bodyFormData.set("studmobileno", this.state.phone) }
+        if(this.state.password === ''){ this.flag = 0; } else{ bodyFormData.set("password", this.state.password) }
+        // if(this.state.deptkey === ''){ this.flag = 0; } else{ bodyFormData.set("deptkey", this.state.deptkey) }
+        // if(this.state.dept === ''){ this.flag = 0; } else{ bodyFormData.set("did", this.state.dept) }
+        // if(this.state.course === ''){ this.flag = 0; } else{ bodyFormData.set("courseid", this.state.course) }
+        // if(this.state.course === ''){ this.flag = 0; } else{ bodyFormData.set("semid", this.state.sem) }
+        // if(this.state.course === ''){ this.flag = 0; } else{ bodyFormData.set("subcode", this.state.course) }
         if(this.state.hasAgreed === false)   this.flag = 0;
 
-        if(this.flag === 1){
-          alert(this.state)
-          console.log(this.state)
 
-            // e.preventDefault(
-            //     console.log(this.state)
-            //     // axios.get(`http://127.0.0.1:8000/student/1/`)
-            //     // .then((res) => {
-            //     //     console.log(res)
-            //     // } )
+        // bodyFormData.set("rollno", 20)
+        // bodyFormData.set("studname", "sushil")
+        // bodyFormData.set("studaddress", "baramati") 
+        // bodyFormData.set("studmobileno", "8378007899") 
+        // bodyFormData.set("studemail", "sushilmaxbhile@gmail.com") 
+        // // bodyFormData.set("password", this.state.passwor) 
+        // // bodyFormData.set("deptkey", this.state.deptkey) 
+        bodyFormData.set("did", -1) 
+        bodyFormData.set("courseid", -1) 
+        bodyFormData.set("semid", -1) 
+        bodyFormData.set("subcode", -1) 
+
+
+
+        if(this.flag === 1){
+          axios({
+            method: 'post',
+            url: `http://127.0.0.1:8000/student/`,
+            data: bodyFormData,
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+            })
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
+
+            e.preventDefault()
+            //     axios.get(`http://127.0.0.1:8000/student/1/`)
+            //     .then((res) => {
+            //         this.res = res;
+            //         console.log(this.res)
+            //     } )
             // );
         }
         else{
-alert("something left empty");
+            alert("something left empty");
         }
 
         e.preventDefault()
@@ -183,7 +215,7 @@ drop down 3: semid (optional)
 
               <div className="FormField">
                 <label className="FormField__CheckboxLabel">
-                    <input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> I agree all statements in <a href="" className="FormField__TermsLink">terms of service</a>
+                    <input className="FormField__Checkbox" type="checkbox" name="hasAgreed" value={this.state.hasAgreed} onChange={this.handleChange} /> I agree all statements in <a href="/sign-in" className="FormField__TermsLink">terms of service</a>
                 </label>
               </div>
 
@@ -206,9 +238,9 @@ const semOptions = [
 ]
 
 
-var vals={
-  'Computer Science':['MCA','MSc','MTech'],
-  'Chemistry':['BSc','MSC']
-}
+// var vals={
+//   'Computer Science':['MCA','MSc','MTech'],
+//   'Chemistry':['BSc','MSC']
+// }
 
 export default SignUpForm;

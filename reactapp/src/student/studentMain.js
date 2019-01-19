@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
-import SignUpForm from './register/SignUpForm';
+import { HashRouter as Router, Route, NavLink } from 'react-router-dom';
 import SignInForm from './login/SignInForm';
 import StudentList from './list/studentList';
-import StudentDetail from './detail/studentDetail';
-import Home from '../src1/Home1'
+// import StudentDetail from './detail/studentDetail';
 
 import '../App.css';
 
@@ -29,7 +27,7 @@ class Student extends Component {
             </div>
 
             {/* <Route exact path="/sign-up" component={SignUpForm}></Route> */}
-            <Route exact path="/sign-up" component={StudentDetail}></Route>
+            <Route exact path="/sign-up" component={StudentList}></Route>
             <Route path="/sign-in" component={SignInForm}></Route>
 
           </div>
