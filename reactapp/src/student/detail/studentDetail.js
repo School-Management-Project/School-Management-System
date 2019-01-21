@@ -1,0 +1,135 @@
+import React, {Component} from 'react'
+
+import axios from 'axios'
+
+import './detail.css'
+import '../../App.css'
+
+class StudentDeatil extends Component{
+    constructor(){
+        super();
+
+        this.state = {
+                    rollNo : null,
+                    studname : '',
+                    studaddress : '',
+                    studmobileno : '',
+                    studemail : '',
+                    deptid : '',
+                    courseid: '',
+                    semid: ''
+        }
+        this.handleChange = this.handleChange.bind(this)
+    }
+
+    handleChange(e) {
+        let target = e.target;
+        let value = target.type === 'checkbox' ? target.checked : target.value;
+        let name = target.name;
+        var self = this;
+
+        this.setState({
+          [name]: value
+        });
+
+        var baseurl = `http://127.0.0.1:8000/student/`
+        var finalUrl = baseurl + value + `/`
+
+        axios({
+            method: 'get',
+            url: finalUrl,
+            config: { headers: {'Content-Type': 'multipart/form-data' }}
+            })
+            .then(function (response) {
+                self.setState({rollno: response.data.rollno})
+                self.setState({studname: response.data.studname})
+                self.setState({studemail: response.data.studemail})
+                self.setState({studaddress: response.data.studaddress})
+                self.setState({studmobileno: response.data.studmobileno})
+                self.setState({deptid: response.data.deptid})
+                self.setState({courseid: response.data.courseid})
+                self.setState({semid: response.data.semid})
+            })
+            .catch(function (response) {
+                self.setState({rollno: null})
+                self.setState({studname: ''})
+                self.setState({studemail: ''})
+                self.setState({studaddress: ''})
+                self.setState({studmobileno: ''})
+                self.setState({deptid: ''})
+                self.setState({courseid: ''})
+                self.setState({semid: ''})
+                alert("Some error occured!")
+            });
+
+    }
+
+
+    render(){
+        var rollNoOption = [
+            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15','300'
+        ]
+
+        return(
+
+            
+            <div>
+                <div className="FormCenter">
+                    <form className="FormFields">
+            
+                        <div className="FormField">
+                            <label className="FormField__Label" htmlFor="rollno">Select Roll Number of Student To See Student Details:-</label>
+            
+                            <select className="select-board-size" name="rollNo" onChange={this.handleChange}>
+                              { rollNoOption.map(value => <option name="rollNo" key={value} value={value}>{value}</option>) }
+                            </select>
+                        
+                        </div>
+            
+                    </form>
+
+
+                </div>
+
+                <div className="detail">
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Name:-</label>   {this.state.studname}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Roll Number:-</label>    {this.state.rollNo}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Address:-</label>    {this.state.studaddress}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Mobile Number:-</label>  {this.state.studmobileno}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Email:-</label>  {this.state.studemail}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student DepartMent Id:-</label>  {this.state.deptid}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Course Id:-</label>  {this.state.courseid}
+                    </div>
+
+                    <div className="FormField">
+                        <label className="FormField__Label" htmlFor="name">Student Semester:-</label>   {this.state.semid}
+                    </div>
+
+                </div> 
+            </div>
+
+        );
+    }
+}
+
+export default StudentDeatil;
