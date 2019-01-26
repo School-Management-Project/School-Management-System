@@ -1,0 +1,28 @@
+.heading2{
+    margin: 0 36%;
+}
+
+.Info{
+    margin:2% 20%;
+    font-size: 18px;
+}
+
+.label {
+    display: block;
+    font-size: .9em;
+    color: black;
+    font-weight: bold;
+}
+
+.Inner{
+    margin:20px;
+}
+
+.heading{
+    list-style-type: circle;
+}
+
+.items{
+    margin-left: 45px;
+    list-style-type: square;
+}
