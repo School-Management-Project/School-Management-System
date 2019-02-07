@@ -19,7 +19,8 @@ class EditForm extends Component {
       redirectToNewPage: false,
       departmentOptions: [],
       courseOptions: [],
-      oldUserName: ''
+      oldUserName: '',
+      olddata:''
     };
 
     this.flag = 0;
@@ -49,12 +50,15 @@ class EditForm extends Component {
     })
       .then(function (response) {
         console.log(response.data)
+        self.state.olddata = response.data;
         self.setState({ 'name': response.data['studname'] })
         self.setState({ 'address': response.data['studaddress'] })
         self.setState({ 'mobileNo': response.data['studmobileno'] })
         self.setState({ 'email': response.data['studemail'] })
         self.setState({ 'course': response.data['courseid'] })
         self.setState({ 'department': response.data['deptid'] })
+
+      
       })
       .catch(function (response) {
         alert("1: Login Credentials are correct but unable to fetch record (errCode: 404), Please Login Again!!")
@@ -107,15 +111,47 @@ class EditForm extends Component {
 
       bodyFormData.set("semid", 1)
 
+      var url = `http://127.0.0.1:8000/studentEdit/`
       axios({
         method: 'put',
-        url: `http://127.0.0.1:8000/studentEdit/` + this.state.oldUserName + `/`,
+        url: url + this.state.oldUserName + `/`,
         data: bodyFormData,
         config: { headers: { 'Content-Type': 'multipart/form-data' } }
       })
         .then(function (response) {
-          let path = `/profile/` + self.state.userName;
-          self.props.history.push(path)
+          var check = localStorage.getItem('user')
+          if (check === 'admin') {
+            let path = `/admin/other/list`;
+            console.log(path)
+            self.props.history.push(path)
+          }
+          else {
+            var nbodyFormData = new FormData();
+            var data = JSON.stringify(response.data)
+    
+            nbodyFormData.set('userName',self.state.userName);
+            nbodyFormData.set('userType','s');
+            nbodyFormData.set('urlFormat',url);
+            nbodyFormData.set('Data',self.state.olddata);
+            nbodyFormData.set('updatedData',data);
+    
+            axios({
+                method: 'post',
+                url: `http://127.0.0.1:8000/log/`,
+                data: nbodyFormData,
+                config: { headers: { 'Content-Type': 'multipart/form-data' } }
+            })
+            .then(function (response){
+                console.log(response)
+            })
+            .catch(function (response){
+                alert(response)
+    
+            })
+    
+            let path = `/profile/` + self.state.userName;
+            self.props.history.push(path)
+          }
         })
         .catch(function (response) {
           alert(response)

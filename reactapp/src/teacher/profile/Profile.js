@@ -26,11 +26,11 @@ class FacultyProfile extends Component {
         if (this.state.uname === '') this.state.flag = false;
         // var state = localStorage.getItem('isLoggedIn')
         // self.state.flag = state
-
+        var finalUrl = `http://127.0.0.1:8000/faculty/`
         if (this.state.flag === true) {
             axios({
                 method: 'get',
-                url: `http://127.0.0.1:8000/faculty/` + this.state.uname + `/`,
+                url: finalUrl + this.state.uname + `/`,
                 config: { headers: { 'Content-Type': 'multipart/form-data' } }
             })
                 .then(function (response) {
@@ -41,25 +41,58 @@ class FacultyProfile extends Component {
                     self.setState({ 'studmobileno': response.data['facultymobileno'] })
                     self.setState({ 'studemail': response.data['facultyemail'] })
                     self.setState({ 'course': response.data['courseid'] })
+
+                    var nbodyFormData = new FormData();
+                    var data = JSON.stringify(response.data)
+
+                    nbodyFormData.set('userName',self.state.uname);
+                    nbodyFormData.set('userType','s');
+                    nbodyFormData.set('urlFormat',finalUrl);
+                    nbodyFormData.set('Data',data);
+
+                    axios({
+                        method: 'post',
+                        url: `http://127.0.0.1:8000/log/`,
+                        data: nbodyFormData,
+                        config: { headers: { 'Content-Type': 'multipart/form-data' } }
+                    })
+                    .then(function (response){
+                        console.log(response)
+                    })
+                    .catch(function (response){
+                        alert(response)
+
+                    })
+
+
+
                 })
                 .catch(function (response) {
                     alert("1: Login Credentials are correct but unable to fetch record (errCode: 404), Please Login Again!!")
-                    let path = `/teacher/sign-in/`;
+                    let path = `/teacher/auth/sign-in/`;
                     self.props.history.push(path)
                 })
         }
         else {
             alert("2: Login Credentials are correct but unable to fetch record (errCode: 404), Please Login Again!!")
-            let path = `/teacher/sign-in/`;
+            let path = `/teacher/auth/sign-in/`;
             self.props.history.push(path)
         }
 
         this.editEvent = this.editEvent.bind(this);
-
+        this.logout = this.logout.bind(this)
     }
 
+    logout(e) {
+        localStorage.removeItem("Token")
+        let path = `/`;
+        this.props.history.replace(path)
+    }
+
+
     editEvent(e) {
-        let path = `/edit/student/` + this.state.uname;
+        console.log('edit event')
+        let path = `/teacher/other/edit/` + this.state.uname;
         this.props.history.replace(path)
     }
 
@@ -78,6 +111,8 @@ class FacultyProfile extends Component {
                 <label className="FormField__Label" htmlFor="name">Course</label>{this.state.course}<br /><br />
 
                 <button className="FormField__Button mr-20" onClick={this.editEvent}>EDIT RECORD</button>
+                <button className="FormField__Button mr-20" onClick={this.logout}>Log-out</button>
+
 
             </div>
         )

@@ -26,11 +26,12 @@ class StudentProfile extends Component {
         // var state = localStorage.getItem('isLoggedIn')
         // self.state.flag = state
         console.log(this.state.flag)
+        var url = `http://127.0.0.1:8000/student/`
 
         if (this.state.flag === true) {
             axios({
                 method: 'get',
-                url: `http://127.0.0.1:8000/student/` + this.state.uname + `/`,
+                url: url + this.state.uname + `/`,
                 config: { headers: { 'Content-Type': 'multipart/form-data' } }
             })
                 .then(function (response) {
@@ -43,6 +44,31 @@ class StudentProfile extends Component {
                     self.setState({ 'rollno': response.data['rollno'] })
                     self.setState({ 'course': response.data['courseid'] })
                     self.setState({ 'dept': response.data['deptid'] })
+
+                    var nbodyFormData = new FormData();
+                    var data = JSON.stringify(response.data)
+
+                    nbodyFormData.set('userName',self.state.uname);
+                    nbodyFormData.set('userType','s');
+                    nbodyFormData.set('urlFormat',url);
+                    nbodyFormData.set('Data',data);
+
+                    // axios({
+                    //     method: 'post',
+                    //     url: `http://127.0.0.1:8000/log/`,
+                    //     data: nbodyFormData,
+                    //     config: { headers: { 'Content-Type': 'multipart/form-data' } }
+                    // })
+                    // .then(function (response){
+                    //     console.log(response)
+                    // })
+                    // .catch(function (response){
+                    //     alert(response)
+
+                    // })
+
+
+
                 })
                 .catch(function (response) {
                     alert("1: Login Credentials are correct but unable to fetch record (errCode: 404), Please Login Again!!")
@@ -61,7 +87,8 @@ class StudentProfile extends Component {
     }
 
     logout(e) {
-        localStorage.removeItem("Token")
+        sessionStorage.removeItem("session")
+        localStorage.removeItem("local")
         let path = `/`;
         this.props.history.replace(path)
     }

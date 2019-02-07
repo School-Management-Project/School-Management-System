@@ -1,22 +1,14 @@
 import React, { Component } from 'react';
 import { HashRouter as Router, Route, NavLink } from 'react-router-dom';
 
-import FacultyProfile from './profile/Profile';
 import SignInForm from './login/SignInForm';
-import StudentList from '../student/list/studentList';
 import SignUpForm from './register/SignUpForm'
-import Attendance from '../attendance/attendance'
-import Grade from '../attendance/grading'
-import StudentDeatil from '../student/detail/studentDetail';
 
 import '../App.css';
 import './teachermain.css'
 
 
 class TeacherLogin extends Component {
-  constructor(props) {
-    super(props)
-  }
   render() {
     return (
       <Router basename="/">

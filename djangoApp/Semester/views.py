@@ -1,25 +1,3 @@
-# from .models import Semester
-# from django.views.decorators.csrf import csrf_exempt
-
-# from .serializers import SemesterSerializer 
-
-# from django.views import generic
-# from rest_framework import viewsets, filters
-# from django.http import HttpResponse
-
-# @csrf_exempt
-# def index(request):
-#     return HttpResponse("hello")
-
-
-# class SemesterViewSet(viewsets.ModelViewSet):
-#     '''
-#     Get all Semester
-#     '''
-#     queryset = Semester.objects.all()
-#     serializer_class = SemesterSerializer
-
-
 
 from .models import Semester
 from .serializers import SemesterSerializer
@@ -27,11 +5,20 @@ from .serializers import SemesterSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from tools.token import verify_jwt
+
 
 
 
 @api_view(['GET','POST'])
 def SemesterList(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
     if request.method == 'GET':
         semester = Semester.objects.all()
         serializer = SemesterSerializer(semester,many=True)
@@ -51,6 +38,13 @@ def SemesterList(request,format=None):
 
 @api_view(['GET','PUT','DELETE'])
 def SemesterDetail(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
     # print("coming\n\n")
     try:
         semester = Semester.objects.get(pk=pk)

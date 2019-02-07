@@ -86,15 +86,43 @@ class SignUpForm extends Component {
       bodyFormData.set("courseid", this.state.course)
       bodyFormData.set("facultysalary", 1)
 
+      var url = `http://127.0.0.1:8000/facultys/`
       axios({
         method: 'post',
-        url: `http://127.0.0.1:8000/facultys/`,
+        url: url,
         data: bodyFormData,
         config: { headers: { 'Content-Type': 'multipart/form-data' } }
       })
         .then(function (response) {
-          let path = `/profile/` + self.state.fusername;
+          
+
+          
+          var nbodyFormData = new FormData();
+          var data = JSON.stringify(response.data)
+
+          nbodyFormData.set('userName',self.state.userName);
+          nbodyFormData.set('userType','T');
+          nbodyFormData.set('urlFormat',url);
+          nbodyFormData.set('Data',data);
+
+          axios({
+              method: 'post',
+              url: `http://127.0.0.1:8000/log/`,
+              data: nbodyFormData,
+              config: { headers: { 'Content-Type': 'multipart/form-data' } }
+          })
+          .then(function (response){
+              console.log(response)
+          })
+          .catch(function (response){
+              alert(response)
+
+          })
+
+          let path = `/teacher/other/profile/` + self.state.userName;
           self.props.history.push(path)
+
+
         })
         .catch(function (response) {
           alert(response)
@@ -183,34 +211,6 @@ class SignUpForm extends Component {
   }
 }
 
-
-// const defaultCourseOption = "Select Dept-Course"
-// const defaultSemOption = 'Select Semester'
-
-// const semOptions = [
-//     '1','2','3','4','5','6'
-// ]
-
-// const deptOptions = [
-//   {
-//     type: 'group', name: 'Computer Science', items: [
-//       { value: 'MCA', label: 'MCA' },
-//       { value: 'MSC', label: 'MSC' }
-//     ]
-//   },
-//   {
-//     type: 'group', name: 'Chemistry', items: [
-//       { value: 'chem1', label: 'Chem 1' },
-//       { value: 'chem2', label: 'Chem 2' }
-//     ]
-//   },
-//   {
-//     type: 'group', name: 'Physics', items: [
-//       { value: 'phy1', label: 'Phy 1' },
-//       { value: 'phy2', label: 'Phy 2' }
-//     ]
-//   }
-// ]
 
 
 export default SignUpForm;

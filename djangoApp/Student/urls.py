@@ -24,6 +24,9 @@ urlpatterns = [
     path('studentEdit/<uname>/', views.StudentEdit),
     path('student/<uname>/', views.StudentDetailByUname),
     path('studentauth/', views.studentLogin),
+    path('studentdept/<int:id>/', views.StudentDetailByDept),
+    path('studentdeptcourse/<int:deptid>/<int:courseid>/', views.StudentDetailByCourse),
+
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

@@ -44,14 +44,36 @@ class SignInForm extends Component {
             bodyFormData.set('uname', this.state.uname)
             bodyFormData.set('passwd', this.state.password)
 
+            var finalUrl = `http://127.0.0.1:8000/facultyauth/`
             axios({
                 method: 'post',
-                url: `http://127.0.0.1:8000/facultyauth/`,
+                url: finalUrl,
                 data: bodyFormData,
                 config: { headers: { 'Content-Type': 'multipart/form-data' } }
             })
                 .then(function (response) {
                     localStorage.setItem('Token', true)
+                    var nbodyFormData = new FormData();
+                    var data = JSON.stringify(response.data)
+    
+                    nbodyFormData.set('userName',self.state.uname);
+                    nbodyFormData.set('userType','T');
+                    nbodyFormData.set('urlFormat',finalUrl);
+                    nbodyFormData.set('Data',data);
+    
+                    axios({
+                        method: 'post',
+                        url: `http://127.0.0.1:8000/log/`,
+                        data: nbodyFormData,
+                        config: { headers: { 'Content-Type': 'multipart/form-data' } }
+                    })
+                    .then(function (response){
+                        console.log(response)
+                    })
+                    .catch(function (response){
+                        alert(response)
+    
+                    })
                     let path = `/teacher/other/profile/` + self.state.uname;
                     self.props.history.replace(path)
                 })

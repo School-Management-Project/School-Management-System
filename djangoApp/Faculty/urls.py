@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     path('facultys/', views.FacultyList),
     path('facultys/<int:pk>/', views.FacultyDetail),
+    path('facultyEdit/<uname>/', views. facultyDetailByUname),
     path('faculty/<uname>/', views.facultyDetailByUname),
     path('facultyauth/', views.facultyLogin),
 ]

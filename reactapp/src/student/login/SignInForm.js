@@ -7,9 +7,8 @@ class SignInForm extends Component {
         super(props);
 
         this.state = {
-            uname: '',
-            password: '',
-            isLoggedIn: false
+            uname: 'sushil',
+            password: 's',
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -34,8 +33,6 @@ class SignInForm extends Component {
         if (this.state.uname === '') flag = 0;
         if (this.state.password === '') flag = 0;
 
-        localStorage.setItem('isLoggedIn', false)
-
 
         if (flag === 0) {
             alert("Something Left Empty!!!")
@@ -45,15 +42,47 @@ class SignInForm extends Component {
             var self = this;
             bodyFormData.set('uname', this.state.uname)
             bodyFormData.set('passwd', this.state.password)
+            var url = `http://127.0.0.1:8000/studentauth/`
 
             axios({
                 method: 'post',
-                url: `http://127.0.0.1:8000/studentauth/`,
+                url: url,
                 data: bodyFormData,
-                config: { headers: { 'Content-Type': 'multipart/form-data' } }
+                
+                config: { headers: { 'Content-Type': 'multipart/form-data' } },
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Content-Type': 'application/json',
+                },
             })
                 .then(function (response) {
-                    localStorage.setItem('isLoggedIn', true)
+                    sessionStorage.setItem('session',response.data)
+                    localStorage.setItem('local',response.data)
+                    var tok = localStorage.getItem('local')
+                    
+                    var nbodyFormData = new FormData();
+                    var data = JSON.stringify(response.data)
+
+                    nbodyFormData.set('userName',self.state.uname);
+                    nbodyFormData.set('userType','s');
+                    nbodyFormData.set('urlFormat',url);
+                    nbodyFormData.set('Data',data);
+                    nbodyFormData.set('Token',tok);
+
+                    axios({
+                        method: 'post',
+                        url: `http://127.0.0.1:8000/log/`,
+                        data: nbodyFormData,
+                        config: { headers: {'Content-Type': 'multipart/form-data'} }
+                    })
+                    .then(function (response){
+                        console.log(response)
+                    })
+                    .catch(function (response){
+                        alert(response)
+
+                    })
+
                     let path = `/studen/profile/` + self.state.uname;
                     self.props.history.push(path)
                 })

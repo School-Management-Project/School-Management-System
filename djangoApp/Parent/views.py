@@ -1,25 +1,3 @@
-# from .models import Parent
-# # from .models import Semester,SubjectFaculty
-# from django.views.decorators.csrf import csrf_exempt
-
-# from .serializers import ParentSerializer
-# # from .serializers import SubjectFacultySerializer
-
-
-
-# from django.views import generic
-# from rest_framework import viewsets, filters
-# from django.http import HttpResponse
-
-# @csrf_exempt
-# def index(request):
-#     return HttpResponse("hello")
-
-
-# class ParentViewSet(viewsets.ModelViewSet):
-#     queryset = Parent.objects.all()
-#     # serializer_class = ParentSerializer
-
 
 from .models import Parent
 from .serializers import ParentSerializer
@@ -27,11 +5,20 @@ from .serializers import ParentSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from tools.token import verify_jwt
+
 
 
 
 @api_view(['GET','POST'])
 def ParentList(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
     if request.method == 'GET':
         parent = Parent.objects.all()
         serializer = ParentSerializer(parent,many=True)
@@ -64,6 +51,14 @@ def ParentList(request,format=None):
 
 @api_view(['GET','PUT','DELETE'])
 def ParentDetail(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
+
     # print("coming\n\n")
     try:
         parent = Parent.objects.get(pk=pk)

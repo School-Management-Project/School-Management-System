@@ -4,12 +4,20 @@ from .serializers import CoursesSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from tools.token import verify_jwt
+
 
 
 
 
 @api_view(['GET','POST'])
 def CoursesList(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     if request.method == 'GET':
         course = Courses.objects.all()
         serializer = CoursesSerializer(course,many=True)
@@ -33,6 +41,12 @@ def CoursesList(request,format=None):
 
 @api_view(['GET','POST'])
 def DeptCourseList(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     if request.method == 'GET':
         course = Courses.objects.filter(deptid=pk)
         serializer = CoursesSerializer(course,many=True)
@@ -41,6 +55,12 @@ def DeptCourseList(request,pk,format=None):
 
 @api_view(['GET','PUT','DELETE'])
 def CourseDetail(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     # print("coming\n\n")
     try:
         course = Courses.objects.get(pk=pk)

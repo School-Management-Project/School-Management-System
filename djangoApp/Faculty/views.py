@@ -1,24 +1,3 @@
-# from .models import Faculty
-# from django.views.decorators.csrf import csrf_exempt
-
-# from .serializers import FacultySerializer 
-
-
-
-# from django.views import generic
-# from rest_framework import viewsets, filters
-# from django.http import HttpResponse
-
-# @csrf_exempt
-# def index(request):
-#     return HttpResponse("hello")
-
-# class FacultyViewSet(viewsets.ModelViewSet):
-#     '''
-#     Get all faculty
-#     '''
-#     queryset = Faculty.objects.all()
-#     serializer_class = FacultySerializer
 
 from .models import Faculty
 from .serializers import FacultySerializer
@@ -26,11 +5,19 @@ from .serializers import FacultySerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-
+from tools.token import create_jwt
+from rest_framework.authtoken.models import Token
+from tools.token import verify_jwt
 
 
 @api_view(['GET','POST'])
 def FacultyList(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     if request.method == 'GET':
         faculty = Faculty.objects.all()
         serializer = FacultySerializer(faculty,many=True)
@@ -63,6 +50,12 @@ def FacultyList(request,format=None):
 
 @api_view(['GET','PUT','DELETE'])
 def FacultyDetail(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     # print("coming\n\n")
     try:
         faculty = Faculty.objects.get(pk=pk)
@@ -93,18 +86,35 @@ def FacultyDetail(request,pk,format=None):
 
 @api_view(['POST'])
 def facultyLogin(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
     if request.method == "POST":
         try:
             Faculty.objects.get(fusername=request.data['uname'],passwd=request.data['passwd'])
-            return Response(status=status.HTTP_200_OK)
+            token = create_jwt(request.data['uname'])
+            return Response(token,status=status.HTTP_200_OK)
         except Faculty.DoesNotExist:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET','PUT','DELETE'])
 def facultyDetailByUname(request,uname,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
+
     try:
         faculty = Faculty.objects.get(fusername = uname)
+        print(faculty)
     except Faculty.DoesNotExist:
         # return Response(status=status.HTTP_404_NOT_FOUND)
         serializer =FacultySerializer(data=request.data)
@@ -119,7 +129,7 @@ def facultyDetailByUname(request,uname,format=None):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = FacultySerializer(aculty,data=request.data)
+        serializer = FacultySerializer(faculty,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data,status=status.HTTP_201_CREATED)
@@ -128,3 +138,4 @@ def facultyDetailByUname(request,uname,format=None):
     elif request.method == 'DELETE':
         faculty.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+

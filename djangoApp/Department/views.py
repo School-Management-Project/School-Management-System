@@ -1,37 +1,22 @@
-# from .models import Department
-# from django.views.decorators.csrf import csrf_exempt
-
-# from .serializers import DepartmentSerializer
-
-# from django.views import generic
-# from rest_framework import viewsets, filters
-# from django.http import HttpResponse
-
-# @csrf_exempt
-# def index(request):
-#     return HttpResponse("hello")
-
-
-
-# class DepartmentViewSet(viewsets.ModelViewSet):
-#     '''
-#     Get all student's records
-#     '''
-#     queryset = Department.objects.all()
-#     serializer_class = DepartmentSerializer
-
-
 from .models import Department
 from .serializers import DepartmentSerializer
 # from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from tools.token import verify_jwt
+
 
 
 
 @api_view(['GET','POST'])
 def DepartmentList(request,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
     if request.method == 'GET':
         department = Department.objects.all()
         serializer = DepartmentSerializer(department,many=True)
@@ -55,6 +40,13 @@ def DepartmentList(request,format=None):
 
 @api_view(['GET','PUT','DELETE'])
 def DepartmentDetail(request,pk,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
     # print("coming\n\n")
     try:
         department = Department.objects.get(pk=pk)
@@ -81,3 +73,20 @@ def DepartmentDetail(request,pk,format=None):
     elif request.method == 'DELETE':
         department.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+
+@api_view(['GET'])
+def DepartmentByName(request,deptname,format=None):
+    token = verify_jwt(request)
+    
+    if(token == None):
+        return HttpResponse(status = status.HTTP_409_CONFLICT)
+
+
+
+    if request.method == 'GET':
+        department = Department.objects.get(deptname=deptname)
+        serializer = DepartmentSerializer( department)
+        return Response(serializer.data)

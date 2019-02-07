@@ -23,6 +23,7 @@ from . import views
 urlpatterns = [
     path('departments/', views.DepartmentList),
     path('departments/<int:pk>/', views.DepartmentDetail),
+    path('departments/<deptname>/', views.DepartmentByName),
 ]
 
 # urlpatterns = format_suffix_patterns(urlpatterns)

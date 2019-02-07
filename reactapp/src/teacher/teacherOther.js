@@ -2,12 +2,11 @@ import React, { Component } from 'react';
 import { HashRouter as Router, Route, NavLink } from 'react-router-dom';
 
 import FacultyProfile from './profile/Profile';
-import SignInForm from './login/SignInForm';
 import StudentList from '../student/list/studentList';
-import SignUpForm from './register/SignUpForm'
 import Attendance from '../attendance/attendance'
 import Grade from '../attendance/grading'
 import StudentDeatil from '../student/detail/studentDetail';
+import EditForm from './edit/EditForm';
 
 import '../App.css';
 import './teachermain.css'
@@ -50,6 +49,7 @@ class TeacherOther extends Component {
                         <Route exact path="/teacher/other/list" component={StudentList}></Route>
                         <Route exact path="/teacher/other/attendance" component={Attendance}></Route>
                         <Route exact path="/teacher/other/grad" component={Grade}></Route>
+                        <Route exact path="/teacher/other/edit/:uname" component={EditForm}></Route>
                     </div>
 
                 </div>

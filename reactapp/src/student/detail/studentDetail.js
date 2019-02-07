@@ -78,6 +78,30 @@ class StudentDeatil extends Component {
                 self.setState({ courseid: response.data.courseid })
                 self.setState({ semid: response.data.semid })
                 self.setState({ susername: response.data.susername })
+                
+
+                var nbodyFormData = new FormData();
+                var data = JSON.stringify(response.data)
+
+                nbodyFormData.set('userName',self.state.uname);
+                nbodyFormData.set('userType','s');
+                nbodyFormData.set('urlFormat',finalUrl);
+                nbodyFormData.set('Data',data);
+
+                axios({
+                    method: 'post',
+                    url: `http://127.0.0.1:8000/log/`,
+                    data: nbodyFormData,
+                    config: { headers: { 'Content-Type': 'multipart/form-data' } }
+                })
+                .then(function (response){
+                    console.log(response)
+                })
+                .catch(function (response){
+                    alert(response)
+
+                })
+
             })
             .catch(function (response) {
                 self.setState({ rollno: null })
@@ -90,15 +114,10 @@ class StudentDeatil extends Component {
                 self.setState({ semid: '' })
                 alert("Some error occured!")
             });
-
     }
 
 
     render() {
-        var rollNoOption = [
-            '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '300'
-        ]
-
         return (
             <div>
                 <div className="FormCenter1">
